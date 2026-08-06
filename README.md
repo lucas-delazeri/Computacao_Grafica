@@ -41,13 +41,13 @@ Abra o terminal do MSYS2 UCRT64 e navegue até a pasta raiz do projeto.
 Compilação:
 
 ```bash
-g++ src/main.cpp src/glad.c -Iinclude -o circulo.exe -lglfw3 -lopengl32 -lgdi32
+g++ src/main.cpp src/glad.c -Iinclude -o main.exe -lglfw3 -lopengl32 -lgdi32
 ```
 
 Execução:
 
 ```bash
-./circulo.exe
+./main.exe
 ```
 
 ### 2. Renderizar o Quadrado (`square.cpp`)
@@ -55,13 +55,13 @@ Execução:
 Compilação:
 
 ```bash
-g++ src/square.cpp src/glad.c -Iinclude -o quadrado.exe -lglfw3 -lopengl32 -lgdi32
+g++ src/square.cpp src/glad.c -Iinclude -o square.exe -lglfw3 -lopengl32 -lgdi32
 ```
 
 Execução:
 
 ```bash
-./quadrado.exe
+./square.exe
 ```
 
 ## 💻 Configuração do VS Code (IntelliSense)
