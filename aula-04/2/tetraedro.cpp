@@ -79,7 +79,7 @@ void process_input(GLFWwindow* window, float dt) {
     if (mode_e) {
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)  scale_x = std::max(0.1f, scale_x - kScaleSpeed * dt);
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) scale_x += kScaleSpeed * dt;
-        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)   scale_y = std::max(0.1f, scale_y - kScaleSpeed * dt);
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)   scale_y = (0.1f, scale_y - kScaleSpeed * dt);
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)     scale_y += kScaleSpeed * dt;
         if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS) scale_z = std::max(0.1f, scale_z - kScaleSpeed * dt);
         if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)   scale_z += kScaleSpeed * dt;
@@ -105,7 +105,7 @@ void resize_window(GLFWwindow* window) {
         GLdouble top = kOrthographicLimitY;
         GLdouble near = -kOrthographicLimitZ;
         GLdouble far = kOrthographicLimitZ;
-
+        // ajusta projeção ortografica em graficos 3d para manter a proporcao correta da imagem
         if (window_width > window_height) {
             glOrtho(left * aspect_ratio, right * aspect_ratio, bottom, top, near, far);
         } else {
