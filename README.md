@@ -1,6 +1,4 @@
-# Projeto OpenGL 3.3 — Círculo e Quadrado
-
-Este repositório contém o código-fonte para renderização de formas geométricas 2D (Círculo e Quadrado) utilizando Modern OpenGL (3.3 Core Profile). O projeto faz uso da biblioteca GLFW para gerenciamento de janelas/eventos e do GLAD para carregamento das funções da GPU.
+# Projetos OpenGL 3.3
 
 ## ⚙️ Pré-requisitos
 
@@ -11,37 +9,16 @@ Caso a biblioteca GLFW ainda não esteja instalada no seu MSYS2, abra o terminal
 ```bash
 pacman -S mingw-w64-ucrt-x86_64-glfw
 ```
-
-## 📁 Estrutura do Repositório
-
-```
-Circle/
-├── .gitignore               # Define arquivos ignorados pelo Git (executáveis, objetos, etc.)
-├── README.md                # Documentação do projeto
-├── .vscode/                 # Configurações do VS Code (IntelliSense e Tasks)
-│   ├── c_cpp_properties.json
-│   └── tasks.json
-├── include/                 # Cabeçalhos do GLAD e KHR
-│   ├── glad/
-│   │   └── glad.h
-│   └── KHR/
-│       └── khrplatform.h
-└── src/                     # Código-fonte C++ e C
-    ├── glad.c
-    ├── main.cpp             # Renderização do Círculo
-    └── square.cpp           # Renderização do Quadrado
-```
-
 ## 🚀 Como Compilar e Executar
 
 Abra o terminal do MSYS2 UCRT64 e navegue até a pasta raiz do projeto.
 
-### 1. Renderizar o Círculo (`main.cpp`)
+### 1. Renderizar
 
 Compilação:
 
 ```bash
-g++ src/main.cpp src/glad.c -Iinclude -o main.exe -lglfw3 -lopengl32 -lgdi32
+g++ src/nome_arquivo.cpp src/glad.c -Iinclude -o main.exe -lglfw3 -lopengl32 -lgdi32
 ```
 
 Execução:
@@ -49,21 +26,6 @@ Execução:
 ```bash
 ./main.exe
 ```
-
-### 2. Renderizar o Quadrado (`square.cpp`)
-
-Compilação:
-
-```bash
-g++ src/square.cpp src/glad.c -Iinclude -o square.exe -lglfw3 -lopengl32 -lgdi32
-```
-
-Execução:
-
-```bash
-./square.exe
-```
-
 ## 💻 Configuração do VS Code (IntelliSense)
 
 O repositório já inclui os arquivos de configuração necessários dentro da pasta `.vscode/`. O arquivo `c_cpp_properties.json` garante o autocomplete e remove avisos de erro de inclusão (como `cannot open source file "GLFW/glfw3.h"`).
