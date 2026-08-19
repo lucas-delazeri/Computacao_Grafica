@@ -92,6 +92,7 @@ void resize_window(GLFWwindow* window) {
     if (window_height == 0) window_height = 1;
 
     glViewport(0, 0, window_width, window_height);
+    // relação matemática entre largura e altura de uma imagem ex: 16:9
     GLdouble aspect_ratio = (GLdouble)window_width / window_height;
 
     glMatrixMode(GL_PROJECTION);
