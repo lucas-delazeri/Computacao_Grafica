@@ -4,3 +4,4 @@
 *.dll
 .vscode/launch.json
 /aula-04/.vscode
+.vscode/
