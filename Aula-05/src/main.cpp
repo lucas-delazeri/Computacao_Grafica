@@ -46,12 +46,13 @@ GLfloat scale_x = kDefaultScale;
 GLfloat scale_y = kDefaultScale;
 GLfloat scale_z = kDefaultScale;
 
+// configs iniciais do HUD
 const GLfloat kHudHeight = 300;
 const GLfloat kHudWidth = 300;
 std::ostringstream hud_text;
 
 void keyboard_read(GLFWwindow* window) {
-  hud_text.str("");
+  hud_text.str(""); // inicializa o hud
 
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
@@ -70,7 +71,7 @@ void keyboard_read(GLFWwindow* window) {
     scale_y = kDefaultScale;
     scale_z = kDefaultScale;
 
-    hud_text << "Resetando transformações";
+    hud_text << "Resetando transformacoes";
   }
 
   if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
@@ -167,31 +168,37 @@ void keyboard_read(GLFWwindow* window) {
       if ((scale_x > 0.1f)) {
         scale_x -= kScaleIncrement;
       }
+      hud_text << "Escalando para esquerda";
     }
     if ((glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)) {
       if ((scale_x < kScaleLimit)) {
-        scale_x += kScaleIncrement;
+        scale_x += kScaleIncrement; 
       }
+      hud_text << "Escalando para direita";
     }
     if ((glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)) {
       if ((scale_y > 0.1f)) {
         scale_y -= kScaleIncrement;
       }
+      hud_text << "Escalando para baixo";
     }
     if ((glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)) {
       if ((scale_y < kScaleLimit)) {
         scale_y += kScaleIncrement;
       }
+      hud_text << "Escalando para cima";
     }
     if ((glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)) {
       if ((scale_z > 0.1f)) {
         scale_z -= kScaleIncrement;
       }
+      hud_text << "Escalando para tras";
     }
     if ((glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)) {
       if ((scale_z < kScaleLimit)) {
         scale_z += kScaleIncrement;
       }
+      hud_text << "Escalando para frente";
     }
   }
 }
