@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <sstream>
+
 #include "font.h"
 
 bool orthographic_view = true;

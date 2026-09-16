@@ -3,12 +3,18 @@
 // URI Santiago
 // Professor Laurence
 
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <GL/glew.h>
+#include <GL/glu.h>
 #include <GLFW/glfw3.h>
 
+#include <cstdint>
 #include <iostream>
 #include <sstream>
-#include "font.h"
+
+#include "lib/font.h"
+#include "lib/stb_image.h"
 
 bool orthographic_view = true;
 const GLfloat kOrthographicLimitX = 5;
@@ -37,7 +43,7 @@ GLfloat rotate_angle_x = kDefaultRotateAngle;
 GLfloat rotate_angle_y = kDefaultRotateAngle;
 GLfloat rotate_angle_z = kDefaultRotateAngle;
 
-bool scalling = false;
+bool scaling = false;
 const GLfloat kScaleLimit = 2;
 const GLfloat kDefaultScale = 1;
 const GLfloat kScaleIncrement = 0.01;
@@ -45,13 +51,41 @@ GLfloat scale_x = kDefaultScale;
 GLfloat scale_y = kDefaultScale;
 GLfloat scale_z = kDefaultScale;
 
-// configs iniciais do HUD
+GLuint red_ball_texture_id;
+GLuint green_ball_texture_id;
+GLuint blue_ball_texture_id;
+GLuint brick_texture_id;
+
 const GLfloat kHudHeight = 300;
 const GLfloat kHudWidth = 300;
 std::ostringstream hud_text;
 
+void load_texture(GLuint& texture_id, const std::string& filepath) {
+  int texture_width, texture_height, texture_channels;
+  uint8_t* texture_data =
+      stbi_load(filepath.c_str(), &texture_width, &texture_height, &texture_channels, 0);
+
+  if (!texture_data) {
+    std::cerr << "Erro ao carregar a textura: " << filepath << std::endl;
+    glfwTerminate();
+    exit(EXIT_FAILURE);
+  }
+
+  glGenTextures(1, &texture_id);
+  glBindTexture(GL_TEXTURE_2D, texture_id);
+  GLenum texture_format = ((texture_channels == 4) ? GL_RGBA : GL_RGB);
+  glTexImage2D(GL_TEXTURE_2D, 0, texture_format, texture_width, texture_height, 0, texture_format,
+               GL_UNSIGNED_BYTE, texture_data);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  stbi_image_free(texture_data);
+}
+
 void keyboard_read(GLFWwindow* window) {
-  hud_text.str(""); // inicializa o hud
+  hud_text.str("");
 
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
@@ -85,6 +119,9 @@ void keyboard_read(GLFWwindow* window) {
 
   if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
     translating = true;
+    rotating = false;
+    scaling = false;
+
     if ((glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)) {
       if ((translate_x > -kTranslateLimit)) {
         translate_x -= kTranslateIncrement;
@@ -124,6 +161,10 @@ void keyboard_read(GLFWwindow* window) {
   }
 
   if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
+    translating = false;
+    rotating = true;
+    scaling = false;
+
     if ((glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)) {
       if ((rotate_angle_x < kRotateAngleLimit)) {
         rotate_angle_x += kRotateAngleIncrement;
@@ -163,6 +204,10 @@ void keyboard_read(GLFWwindow* window) {
   }
 
   if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+    translating = false;
+    rotating = false;
+    scaling = true;
+
     if ((glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)) {
       if ((scale_x > 0.1f)) {
         scale_x -= kScaleIncrement;
@@ -206,7 +251,6 @@ void resize_window(GLFWwindow* window) {
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
   glViewport(0, 0, width, height);
-
   GLdouble aspect_ratio = (GLdouble)width / height;
 
   glMatrixMode(GL_PROJECTION);
@@ -234,10 +278,36 @@ void resize_window(GLFWwindow* window) {
   }
 }
 
-void draw() {
+void draw(GLFWwindow* window) {
+  int window_width, window_height;
+  glfwGetFramebufferSize(window, &window_width, &window_height);
+  GLdouble aspect_ratio = (GLdouble)window_width / window_height;
+
+  // Configura a projeção dinamicamente com base na visão ativa
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  if (orthographic_view) {
+    GLdouble left = -kOrthographicLimitX;
+    GLdouble right = kOrthographicLimitX;
+    GLdouble bottom = -kOrthographicLimitY;
+    GLdouble top = kOrthographicLimitY;
+    GLdouble near = -kOrthographicLimitZ;
+    GLdouble far = kOrthographicLimitZ;
+    if (window_width > window_height) {
+      glOrtho((left * aspect_ratio), (right * aspect_ratio), bottom, top, near, far);
+    } else {
+      glOrtho(left, right, (bottom / aspect_ratio), (top / aspect_ratio), near, far);
+    }
+  } else if (perspective_view) {
+    GLdouble field_of_view = kPerspectiveFieldOfViewAngle;
+    GLdouble near = kPerspectiveNearZ;
+    GLdouble far = kPerspectiveFarZ;
+    gluPerspective(field_of_view, aspect_ratio, near, far);
+  }
+
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  draw_text(5, 5, hud_text.str());
 
   glTranslatef(translate_x, translate_y, (translate_z - kPerspectiveTranslateZ));
 
@@ -247,45 +317,73 @@ void draw() {
 
   glScalef(scale_x, scale_y, scale_z);
 
+  glColor3ub(255, 255, 255);
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, brick_texture_id);
   glBegin(GL_QUADS);
-  {
-    glColor3ub(255, 0, 0);
+
+  {    // Frente
+    glTexCoord2f(0, 0);
     glVertex3f(-2, -2, 2);
+    glTexCoord2f(1, 0);
     glVertex3f(2, -2, 2);
+    glTexCoord2f(1, 1);
     glVertex3f(2, 2, 2);
+    glTexCoord2f(0, 1);
     glVertex3f(-2, 2, 2);
 
-    glColor3ub(0, 255, 0);
+    // Trás
+    glTexCoord2f(0, 0);
     glVertex3f(-2, -2, -2);
+    glTexCoord2f(0, 1);
     glVertex3f(-2, 2, -2);
+    glTexCoord2f(1, 1);
     glVertex3f(2, 2, -2);
+    glTexCoord2f(1, 0);
     glVertex3f(2, -2, -2);
 
-    glColor3ub(0, 0, 255);
+    // Esquerda
+    glTexCoord2f(0, 0);
     glVertex3f(-2, -2, -2);
+    glTexCoord2f(1, 0);
     glVertex3f(-2, -2, 2);
+    glTexCoord2f(1, 1);
     glVertex3f(-2, 2, 2);
+    glTexCoord2f(0, 1);
     glVertex3f(-2, 2, -2);
 
-    glColor3ub(255, 255, 0);
+    // Direita
+    glTexCoord2f(0, 0);
     glVertex3f(2, -2, -2);
+    glTexCoord2f(0, 1);
     glVertex3f(2, 2, -2);
+    glTexCoord2f(1, 1);
     glVertex3f(2, 2, 2);
+    glTexCoord2f(1, 0);
     glVertex3f(2, -2, 2);
 
-    glColor3ub(255, 0, 255);
+    // Cima
+    glTexCoord2f(0, 0);
     glVertex3f(-2, 2, -2);
+    glTexCoord2f(0, 1);
     glVertex3f(-2, 2, 2);
+    glTexCoord2f(1, 1);
     glVertex3f(2, 2, 2);
+    glTexCoord2f(1, 0);
     glVertex3f(2, 2, -2);
 
-    glColor3ub(0, 255, 255);
+    // Baixo
+    glTexCoord2f(0, 0);
     glVertex3f(-2, -2, -2);
+    glTexCoord2f(1, 0);
     glVertex3f(2, -2, -2);
+    glTexCoord2f(1, 1);
     glVertex3f(2, -2, 2);
+    glTexCoord2f(0, 1);
     glVertex3f(-2, -2, 2);
   }
   glEnd();
+  glDisable(GL_TEXTURE_2D);
 }
 
 void draw_hud(GLFWwindow* window) {
@@ -312,25 +410,58 @@ void draw_hud(GLFWwindow* window) {
     glColor3ub(255, 255, 255);
     draw_text(5, 5, hud_text.str());
 
-    glPointSize(20);
-    glBegin(GL_POINTS);
-    {
-      if (translating) {
-        glColor3ub(255, 0, 0);
-        glVertex2f(7.5, 20);
-      }
+    glColor3ub(255, 255, 255);
+    glEnable(GL_TEXTURE_2D);
 
-      if (rotating) {
-        glColor3ub(0, 255, 0);
-        glVertex2f(17.5, 20);
+    if (translating) {
+      glBindTexture(GL_TEXTURE_2D, red_ball_texture_id);
+      glBegin(GL_QUADS);
+      {
+        glTexCoord2f(0, 0);
+        glVertex2f(5, 15);
+        glTexCoord2f(1, 0);
+        glVertex2f(15, 15);
+        glTexCoord2f(1, 1);
+        glVertex2f(15, 25);
+        glTexCoord2f(0, 1);
+        glVertex2f(5, 25);
       }
-
-      if (scalling) {
-        glColor3ub(0, 0, 255);
-        glVertex2f(27.5, 20);
-      }
+      glEnd();
     }
-    glEnd();
+
+    if (rotating) {
+      glBindTexture(GL_TEXTURE_2D, green_ball_texture_id);
+      glBegin(GL_QUADS);
+      {
+        glTexCoord2f(0, 0);
+        glVertex2f(15, 15);
+        glTexCoord2f(1, 0);
+        glVertex2f(25, 15);
+        glTexCoord2f(1, 1);
+        glVertex2f(25, 25);
+        glTexCoord2f(0, 1);
+        glVertex2f(15, 25);
+      }
+      glEnd();
+    }
+
+    if (scaling) {
+      glBindTexture(GL_TEXTURE_2D, blue_ball_texture_id);
+      glBegin(GL_QUADS);
+      {
+        glTexCoord2f(0, 0);
+        glVertex2f(25, 15);
+        glTexCoord2f(1, 0);
+        glVertex2f(35, 15);
+        glTexCoord2f(1, 1);
+        glVertex2f(35, 25);
+        glTexCoord2f(0, 1);
+        glVertex2f(25, 25);
+      }
+      glEnd();
+    }
+
+    glDisable(GL_TEXTURE_2D);
   }
   glEnable(GL_DEPTH_TEST);
 }
@@ -348,6 +479,7 @@ int main() {
     return EXIT_FAILURE;
   }
   glfwSetWindowPos(window, 0, 0);
+  glfwSetWindowTitle(window, "Cubo com textura");
   glfwMakeContextCurrent(window);
 
   if (glewInit() != GLEW_OK) {
@@ -357,12 +489,17 @@ int main() {
 
   glEnable(GL_DEPTH_TEST);
 
+  load_texture(red_ball_texture_id, "textures/red_ball.png");
+  load_texture(green_ball_texture_id, "textures/green_ball.png");
+  load_texture(blue_ball_texture_id, "textures/blue_ball.png");
+  load_texture(brick_texture_id, "textures/brick.png");
+
   while (!glfwWindowShouldClose(window)) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     keyboard_read(window);
     resize_window(window);
-    draw();
+    draw(window);
     draw_hud(window);
 
     glfwSwapBuffers(window);
