@@ -209,11 +209,6 @@ void draw(GLFWwindow* window) {
   glEnable(GL_TEXTURE_2D);
   glPushMatrix();
   {
-    glTranslatef(kTreePositionX, kTreePositionY, kTreePositionZ);
-    GLfloat tree_direction_angle_radians = atan2f(camera_direction_x, camera_direction_z);
-    GLfloat tree_direction_angle = tree_direction_angle_radians * (180.0 / 3.1415);
-    glRotatef(tree_direction_angle, 0, 1, 0);
-    glBindTexture(GL_TEXTURE_2D, tree_texture_id);
     glBegin(GL_QUADS);
     {
       glTexCoord2f(1, 0);

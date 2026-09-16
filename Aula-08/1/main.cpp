@@ -368,10 +368,10 @@ void keyboard_read(GLFWwindow* window) {
 }
 
 void resize_window(GLFWwindow* window) {
-  int width, height;
-  glfwGetFramebufferSize(window, &width, &height);
-  glViewport(0, 0, width, height);
-  GLdouble aspect_ratio = (GLdouble)width / height;
+  int window_width, window_height;
+  glfwGetFramebufferSize(window, &window_width, &window_height);
+  glViewport(0, 0, window_width, window_height);
+  GLdouble aspect_ratio = (GLdouble)window_width / window_height;
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -383,7 +383,7 @@ void resize_window(GLFWwindow* window) {
     GLdouble top = kOrthographicLimitY;
     GLdouble near = -kOrthographicLimitZ;
     GLdouble far = kOrthographicLimitZ;
-    if (width > height) {
+    if (window_width > window_height) {
       glOrtho((left * aspect_ratio), (right * aspect_ratio), bottom, top, near, far);
     } else {
       glOrtho(left, right, (bottom / aspect_ratio), (top / aspect_ratio), near, far);
