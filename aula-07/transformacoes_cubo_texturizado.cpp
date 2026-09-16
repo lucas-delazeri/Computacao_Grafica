@@ -1,8 +1,3 @@
-// Copyright
-// Computação Gráfica
-// URI Santiago
-// Professor Laurence
-
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <GL/glew.h>

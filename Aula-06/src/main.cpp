@@ -281,6 +281,8 @@ void draw() {
       glVertex3f(2, 2, 2);
       glVertex3f(-2, 2, 2);
 
+      glEnd();
+
       glLineWidth(5);
       glColor3ub(255, 0, 255);
 
