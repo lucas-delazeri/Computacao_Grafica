@@ -64,7 +64,7 @@ bool translating_backward = false;
 bool translating_up = false;
 bool translating_down = false;
 
-const GLfloat kTranslateLimit = 10;
+const GLfloat kTranslateLimit = 50;
 const GLfloat kDefaultTranslate = 0;
 const GLfloat kDefaultTranslateIncrement = 0.05;
 GLfloat translate_x = kDefaultTranslate;
@@ -83,7 +83,7 @@ bool rotating_down = false;
 
 const GLfloat kRotateAngleLimit = 360;
 const GLfloat kDefaultRotateAngle = 0;
-const GLfloat kDefaultRotateIncrement = 1;
+const GLfloat kDefaultRotateIncrement = 0.3;
 GLfloat rotate_x = kDefaultRotateAngle;
 GLfloat rotate_y = kDefaultRotateAngle;
 GLfloat rotate_z = kDefaultRotateAngle;
@@ -98,7 +98,7 @@ bool scaling_backward = false;
 bool scaling_up = false;
 bool scaling_down = false;
 
-const GLfloat kScaleLimit = 5;
+const GLfloat kScaleLimit = 15;
 const GLfloat kScaleMinLimit = 0.1;
 const GLfloat kDefaultScale = 1;
 const GLfloat kDefaultScaleIncrement = 0.02;
@@ -517,8 +517,8 @@ void draw(GLFWwindow* window) {
 
   glScalef(scale_x, scale_y, scale_z);
 
-  // distancias uniformes entre as cadeiras
-  for (int i = 0; i < 50; i++) {
+  // distancias uniformes entre os modelos
+  for (int i = 0; i < 110; i++) {
     glPushMatrix();
     glTranslatef(i * kModelSpacing, i * kModelSpacing, i * kModelSpacing);
     glScalef(kModelScale, kModelScale, kModelScale);  
