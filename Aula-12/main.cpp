@@ -362,7 +362,7 @@ void draw(GLFWwindow* window) {
   glPushMatrix();
   glPushAttrib(GL_LIGHTING_BIT);
   {
-    const GLfloat kDiamondSpecular[] = { 350 }; // MUDAR SPECULAR PARA A DIAMANTE
+    const GLfloat kDiamondSpecular[] = { 350 };
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, kDiamondSpecular);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, kMaterialShininessMirror);
 
