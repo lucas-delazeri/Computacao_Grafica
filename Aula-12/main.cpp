@@ -362,8 +362,8 @@ void draw(GLFWwindow* window) {
   glPushMatrix();
   glPushAttrib(GL_LIGHTING_BIT);
   {
-    const GLfloat kTreeSpecular[] = { 350 }; // MUDAR SPECULAR PARA A DIAMANTE
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, kTreeSpecular);
+    const GLfloat kDiamondSpecular[] = { 350 }; // MUDAR SPECULAR PARA A DIAMANTE
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, kDiamondSpecular);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, kMaterialShininessMirror);
 
     glTranslatef(2, 0, 1);
