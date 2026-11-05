@@ -1,36 +1,38 @@
-# Projetos OpenGL 3.3
+# OpenGL 3.3 Projects
 
-## ⚙️ Pré-requisitos
+## ⚙️ Prerequisites
 
-Para compilar e executar este projeto no Windows, você precisará do ambiente MSYS2 (UCRT64) com o compilador `g++` e a biblioteca GLFW3 instalados no sistema.
+To compile and run this project on Windows, you will need the MSYS2 (UCRT64) environment with the `g++` compiler and the GLFW3 library installed on your system.
 
-Caso a biblioteca GLFW ainda não esteja instalada no seu MSYS2, abra o terminal MSYS2 UCRT64 e execute:
+If the GLFW library is not yet installed in your MSYS2, open the MSYS2 UCRT64 terminal and run:
 
 ```bash
 pacman -S mingw-w64-ucrt-x86_64-glfw
 ```
-## 🚀 Como Compilar e Executar
 
-Abra o terminal do MSYS2 UCRT64 e navegue até a pasta raiz do projeto.
+## 🚀 How to Compile and Run
 
-### 1. Renderizar
+Open the MSYS2 UCRT64 terminal and navigate to the project's root folder.
 
-Compilação:
+### 1. Rendering
+
+Compilation:
 
 ```bash
-g++ src/nome_arquivo.cpp src/glad.c -Iinclude -o main.exe -lglfw3 -lopengl32 -lgdi32
+g++ src/file_name.cpp src/glad.c -Iinclude -o main.exe -lglfw3 -lopengl32 -lgdi32
 ```
 
-Execução:
+Execution:
 
 ```bash
 ./main.exe
 ```
-## 💻 Configuração do VS Code (IntelliSense)
 
-O repositório já inclui os arquivos de configuração necessários dentro da pasta `.vscode/`. O arquivo `c_cpp_properties.json` garante o autocomplete e remove avisos de erro de inclusão (como `cannot open source file "GLFW/glfw3.h"`).
+## 💻 VS Code Configuration (IntelliSense)
 
-Ele está pré-configurado com o caminho padrão de instalação do MSYS2:
+The repository already includes the necessary configuration files inside the `.vscode/` folder. The `c_cpp_properties.json` file ensures autocomplete works correctly and removes include error warnings (such as `cannot open source file "GLFW/glfw3.h"`).
+
+It is pre-configured with the default MSYS2 installation path:
 
 ```json
 {
@@ -57,14 +59,14 @@ Ele está pré-configurado com o caminho padrão de instalação do MSYS2:
 }
 ```
 
-📌 **Observação sobre o caminho do MSYS2:**
-Se o seu MSYS2 estiver instalado em uma pasta ou unidade diferente (por exemplo, `D:/msys64` ou `C:/Ferramentas/msys64`), basta atualizar as propriedades `"includePath"` e `"compilerPath"` no arquivo `.vscode/c_cpp_properties.json` apontando para o seu diretório correspondente.
+📌 **Note on the MSYS2 path:**
+If your MSYS2 is installed in a different folder or drive (for example, `D:/msys64` or `C:/Tools/msys64`), simply update the `"includePath"` and `"compilerPath"` properties in the `.vscode/c_cpp_properties.json` file to point to your corresponding directory.
 
-## 🛠️ Detalhamento das Flags do Compilador
+## 🛠️ Compiler Flags Breakdown
 
-- `src/*.cpp src/glad.c`: Compila o código-fonte da aplicação em conjunto com o carregador GLAD.
-- `-Iinclude`: Adiciona a pasta local `include/` ao caminho de busca dos cabeçalhos (`glad/glad.h` e `KHR/khrplatform.h`).
-- `-o <nome>.exe`: Define o nome do executável de saída.
-- `-lglfw3`: Realiza o link com a biblioteca dinâmica GLFW3 gerenciada pelo MSYS2.
-- `-lopengl32`: Realiza o link com o driver OpenGL nativo do Windows.
-- `-lgdi32`: Biblioteca de interface gráfica do Windows necessária para o funcionamento da GLFW.
+- `src/*.cpp src/glad.c`: Compiles the application's source code along with the GLAD loader.
+- `-Iinclude`: Adds the local `include/` folder to the header search path (`glad/glad.h` and `KHR/khrplatform.h`).
+- `-o <name>.exe`: Sets the name of the output executable.
+- `-lglfw3`: Links against the GLFW3 dynamic library managed by MSYS2.
+- `-lopengl32`: Links against the native Windows OpenGL driver.
+- `-lgdi32`: Windows Graphics Device Interface library required for GLFW to function properly.
